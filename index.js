@@ -1,38 +1,19 @@
-const http = require("http");
-const fs = require("fs");
+const express = require("express");
+const app = express();
+const port = 3000;
 
-http
-	.createServer((req, res) => {
-		if (req.url === "/") {
-			fs.readFile("index.html", (err, content) => {
-				if (err) throw err;
-				res.writeHead(200, { "Content-Type": "text/html" });
-				res.write(content);
-				return res.end();
-			});
-		} else if (req.url === "/about") {
-			fs.readFile("about.html", (err, content) => {
-				if (err) throw err;
-				res.writeHead(200, { "Content-Type": "text/html" });
-				res.write(content);
-				return res.end();
-			});
-		} else if (req.url === "/contact") {
-			fs.readFile("contact.html", (err, content) => {
-				if (err) throw err;
-				res.writeHead(200, { "Content-Type": "text/html" });
-				res.write(content);
-				return res.end();
-			});
-		} else {
-			fs.readFile("error.html", (err, content) => {
-				if (err) throw err;
-				res.writeHead(200, { "Content-Type": "text/html" });
-				res.write(content);
-				return res.end();
-			});
-		}
-	})
-	.listen(1704, () => {
-		console.log("listening on port 1704");
-	});
+app.get("/", (req, res) => {
+	res.sendFile(__dirname + "/index.html");
+});
+app.get("/about", (req, res) => {
+	res.sendFile(__dirname + "/about.html");
+});
+app.get("/contact", (req, res) => {
+	res.sendFile(__dirname + "/contact.html");
+});
+app.use((req, res) => {
+	res.status(404).sendFile(__dirname + "/error.html");
+});
+app.listen(port, () => {
+	console.log(`listening on ports : ${port}`);
+});
